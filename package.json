@@ -1,0 +1,15 @@
+{
+  "name": "api-googlesheets",
+  "version": "1.0.0",
+  "description": "API para comunicação com Google Sheets",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^4.18.2",
+    "googleapis": "^118.0.0",
+    "nodemon": "^3.1.11"
+  }
+}
