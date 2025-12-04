@@ -25,7 +25,11 @@ universe_domain: process.env.UNIVERSE_DOMAIN
 app.use(express.json())
 
 // Configuração do CORS
-app.use(cors());
+app.use(cors({
+     origin: '*', // Permite todas as origens
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 async function getAuthSheets() {
     try {
