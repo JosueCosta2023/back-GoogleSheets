@@ -18,6 +18,8 @@ client_x509_cert_url: process.env.CLIENT_X509_CERT_URL,
 universe_domain: process.env.UNIVERSE_DOMAIN
 }
 
+app.use(express.json())
+
 async function getAuthSheets() {
     try {
         const auth = new google.auth.GoogleAuth({
@@ -75,6 +77,8 @@ app.get("/getRows", async (req, res) => {
         auth,
         spreadsheetId,
         range: "bancoDeDados",
+        valueRenderOption: "UNFORMATTED_VALUE",
+        dateTimeRenderOption: "FORMATTED_STRING"
      })
 
      res.send(getRouws.data.values)
@@ -83,6 +87,54 @@ app.get("/getRows", async (req, res) => {
     } catch (error) {
         console.log("Falha ao buscar dados da planilha.")
         res.send({message: "Falha ao buscar dados da planilha.", error: error})
+    }
+})
+
+
+app.post("/addRow", async (req, res) => {
+    try {
+        const {googleSheets, auth, spreadsheetId} = await getAuthSheets();
+
+        const {values} = req.body
+
+        const row = await googleSheets.spreadsheets.values.append({
+            auth, 
+            spreadsheetId,
+            range: "bancoDeDados",
+            valueInputOption: "USER_ENTERED",
+            resource: {
+                values: values,
+            }
+        })
+
+        
+    } catch (error) {
+        console.log("Falha ao realizar novo pedido.")
+        res.send({message: "Falhar ao realizar novo pedido", error: error})
+    }
+})
+
+app.post("/updateValues", async (req, res)=> {
+    try {
+        const {googleSheets, auth, spreadsheetId} = await getAuthSheets();
+
+        const {values} =  req.body
+
+        const updateValue = await googleSheets.spreadsheets.values.update({
+            spreadsheetId,
+            range: "bancoDeDados",
+            valueInputOption: "USER_ENTERED",
+            resource: {
+                values: values
+            }
+
+        })
+
+        res.send(updateValue.data)
+        
+    } catch (error) {
+        console.log("Falhar ao atualizar pedido.")
+        res.send({message: "Falha ao atualizar pedido", error: error})
     }
 })
 
