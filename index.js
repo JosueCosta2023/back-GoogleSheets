@@ -152,7 +152,7 @@ const swaggerOptions = {
         },
         servers: [
             {
-                url: process.env.BASE_URL || 'https://back-google-sheets-9ignwr641-josues-projects-be67fa8d.vercel.app/',
+                url: process.env.BASE_URL || 'https://back-google-sheets-9ignwr641-josues-projects-be67fa8d.vercel.app',
                 description: 'Servidor de produção'
             }
         ]
