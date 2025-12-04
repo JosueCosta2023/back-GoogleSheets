@@ -160,7 +160,12 @@ const swaggerOptions = {
 };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, { explorer: true }));
+
+// Middleware para depuração
+app.use('/api-docs', (req, res, next) => {
+    console.log('Acessando /api-docs');
+    next();
+}, swaggerUi.serve, swaggerUi.setup(swaggerDocs, { explorer: true }));
 
 /**
  * @swagger
