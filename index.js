@@ -145,6 +145,13 @@ app.post("/updateValues", async (req, res)=> {
     }
 })
 
+// Ajustando lógica para alternar entre URL local e produção
+const isProduction = process.env.NODE_ENV === 'production';
+const baseUrl = isProduction ? process.env.BASE_URL : `http://localhost:${process.env.PORT || 3001}`;
+
+console.log(`Ambiente: ${isProduction ? 'Produção' : 'Local'}`);
+console.log(`URL configurada no Swagger: ${baseUrl}`);
+
 // Configuração do Swagger
 const swaggerOptions = {
     definition: {
@@ -156,8 +163,8 @@ const swaggerOptions = {
         },
         servers: [
             {
-                url: process.env.BASE_URL || `http://localhost:${process.env.PORT || 3001}`,
-                description: process.env.NODE_ENV === 'production' ? 'Servidor de produção' : 'Servidor local'
+                url: baseUrl,
+                description: isProduction ? 'Servidor de produção' : 'Servidor local'
             }
         ]
     },
