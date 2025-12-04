@@ -27,7 +27,13 @@ app.use(express.json())
 // Configuração do CORS para permitir apenas o Swagger UI
 app.use(cors({
     origin: (origin, callback) => {
-        if (!origin || origin.includes('localhost') || origin.includes('swagger-ui')) {
+        const allowedOrigins = [
+            'http://localhost:3001', // Ambiente local
+            'https://back-google-sheets-git-main-josues-projects-be67fa8d.vercel.app/', // URL de produção
+            'http://localhost:3001/api-docs', // Swagger local
+            'https://back-google-sheets-git-main-josues-projects-be67fa8d.vercel.app/api-docs' // Swagger em produção
+        ];
+        if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
