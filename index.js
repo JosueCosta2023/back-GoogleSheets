@@ -1,5 +1,6 @@
 const express = require('express');
 const { google } = require('googleapis');
+const cors = require('cors');
 const app = express();
 const port = 3001;
 require("dotenv").config();
@@ -22,6 +23,9 @@ universe_domain: process.env.UNIVERSE_DOMAIN
 }
 
 app.use(express.json())
+
+// Configuração do CORS
+app.use(cors());
 
 async function getAuthSheets() {
     try {
