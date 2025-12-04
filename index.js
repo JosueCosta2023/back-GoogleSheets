@@ -24,16 +24,30 @@ universe_domain: process.env.UNIVERSE_DOMAIN
 
 app.use(express.json())
 
-// Configuração do CORS para permitir todas as origens
+// Configuração do CORS para permitir origens específicas
+const allowedOrigins = [
+    'https://back-google-sheets-6inhdym9o-josues-projects-be67fa8d.vercel.app', // Origem da API
+    'https://back-google-sheets-git-main-josues-projects-be67fa8d.vercel.app', // Origem do Swagger UI
+];
+
 app.use(cors({
-    origin: '*', // Permite todas as origens
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Adicionando cabeçalhos CORS manualmente
 app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
