@@ -26,7 +26,7 @@ app.use(express.json())
 
 // Configuração do CORS
 app.use(cors({
-     origin: '*', // Permite todas as origens
+    origin: '*', // Permite todas as origens
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
