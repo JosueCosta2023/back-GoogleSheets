@@ -24,9 +24,15 @@ universe_domain: process.env.UNIVERSE_DOMAIN
 
 app.use(express.json())
 
-// Configuração do CORS
+// Configuração do CORS para permitir apenas o Swagger UI
 app.use(cors({
-    origin: '*', // Permite todas as origens
+    origin: (origin, callback) => {
+        if (!origin || origin.includes('localhost') || origin.includes('swagger-ui')) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
