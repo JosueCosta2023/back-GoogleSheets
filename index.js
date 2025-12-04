@@ -3,6 +3,8 @@ const { google } = require('googleapis');
 const app = express();
 const port = 3001;
 require("dotenv").config();
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
 
 const credentials = {
 type: process.env.TYPE,
@@ -138,8 +140,49 @@ app.post("/updateValues", async (req, res)=> {
     }
 })
 
+// Configuração do Swagger
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'Google Sheets API',
+            version: '1.0.0',
+            description: 'API para integração com Google Sheets',
+        },
+    },
+    apis: ['./index.js'], // Caminho para os comentários das rotas
+};
+
+const swaggerDocs = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+/**
+ * @swagger
+ * /metadata:
+ *   get:
+ *     summary: Retorna os metadados da planilha
+ *     responses:
+ *       200:
+ *         description: Metadados retornados com sucesso
+ *       500:
+ *         description: Falha ao buscar metadados
+ */
+
+/**
+ * @swagger
+ * /getRows:
+ *   get:
+ *     summary: Retorna as linhas da planilha
+ *     responses:
+ *       200:
+ *         description: Linhas retornadas com sucesso
+ *       500:
+ *         description: Falha ao buscar dados da planilha
+ */
+
 
 // Inicialização do servidor
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
+  console.log(`Documentação rodando em http://localhost:${port}/api-docs`);
 });
