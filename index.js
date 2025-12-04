@@ -24,24 +24,19 @@ universe_domain: process.env.UNIVERSE_DOMAIN
 
 app.use(express.json())
 
-// Configuração do CORS para permitir apenas o Swagger UI
+// Configuração do CORS para corrigir bloqueio em produção
 app.use(cors({
-    origin: (origin, callback) => {
-        const allowedOrigins = [
-            'http://localhost:3001', // Ambiente local
-            'https://back-google-sheets-git-main-josues-projects-be67fa8d.vercel.app/', // URL de produção
-            'http://localhost:3001/api-docs', // Swagger local
-            'https://back-google-sheets-git-main-josues-projects-be67fa8d.vercel.app/api-docs' // Swagger em produção
-        ];
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
+    origin: '*', // Permite todas as origens
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+// Adicionando middleware para depuração de requisições
+app.use((req, res, next) => {
+    console.log(`Requisição recebida: ${req.method} ${req.url}`);
+    console.log(`Headers:`, req.headers);
+    next();
+});
 
 async function getAuthSheets() {
     try {
