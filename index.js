@@ -149,15 +149,18 @@ const swaggerOptions = {
             version: '1.0.0',
             description: 'API para integração com Google Sheets',
         },
+        servers: [
+            {
+                url: process.env.BASE_URL || 'http://localhost:3001',
+                description: 'Servidor de produção'
+            }
+        ]
     },
     apis: ['./index.js'], // Caminho para os comentários das rotas
 };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
-app.use('/api-docs', (req, res, next)  => {
-    console.log("Acessando /api-docs")
-    next()
-}, swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, { explorer: true }));
 
 /**
  * @swagger
