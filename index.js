@@ -5,6 +5,7 @@ const port = 3001;
 require("dotenv").config();
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
+const path = require('path');
 
 const credentials = {
 type: process.env.TYPE,
@@ -161,7 +162,10 @@ const swaggerOptions = {
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 
-// Middleware para depuração
+// Middleware para servir arquivos estáticos do Swagger
+app.use('/swagger-ui', express.static(path.join(__dirname, 'node_modules/swagger-ui-dist')));
+
+// Configuração da rota /api-docs
 app.use('/api-docs', (req, res, next) => {
     console.log('Acessando /api-docs');
     next();
