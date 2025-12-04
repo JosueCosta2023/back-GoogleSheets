@@ -152,8 +152,8 @@ const swaggerOptions = {
         },
         servers: [
             {
-                url: process.env.BASE_URL || 'https://back-google-sheets-9ignwr641-josues-projects-be67fa8d.vercel.app',
-                description: 'Servidor de produção'
+                url: process.env.BASE_URL || `http://localhost:${process.env.PORT || 3001}`,
+                description: process.env.NODE_ENV === 'production' ? 'Servidor de produção' : 'Servidor local'
             }
         ]
     },
@@ -167,7 +167,7 @@ app.use('/swagger-ui', express.static(path.join(__dirname, 'node_modules/swagger
 
 // Configuração da rota /api-docs
 app.use('/api-docs', (req, res, next) => {
-    console.log('Acessando /api-docs');
+    console.log(`Acessando /api-docs no ambiente: ${process.env.NODE_ENV || 'development'}`);
     next();
 }, swaggerUi.serve, swaggerUi.setup(swaggerDocs, { explorer: true }));
 
