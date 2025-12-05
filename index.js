@@ -24,24 +24,31 @@ universe_domain: process.env.UNIVERSE_DOMAIN
 
 app.use(express.json())
 
-// Configuração do CORS para permitir todas as origens
+// Atualizar configuração de CORS para incluir a URL de produção do Swagger UI
+const allowedOrigins = [
+    'http://localhost:3000', // Swagger UI local
+    process.env.BASE_URL,   // URL de produção
+    'https://editor.swagger.io', // Swagger Editor
+    'https://back-google-sheets-4ewrsrk87-josues-projects-be67fa8d.vercel.app' // Swagger UI em produção
+];
+
 app.use(cors({
-    origin: '*', // Permite todas as origens
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error(`Origem não permitida: ${origin}`));
+        }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true // Permitir envio de cookies e headers de autenticação
 }));
 
-// Adicionando cabeçalhos CORS manualmente
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    next();
-});
-
-// Adicionando middleware para depuração de requisições
+// Adicionar logs detalhados para depuração de CORS
 app.use((req, res, next) => {
     console.log(`Requisição recebida: ${req.method} ${req.url}`);
+    console.log(`Origem: ${req.headers.origin}`);
     console.log(`Headers:`, req.headers);
     next();
 });
