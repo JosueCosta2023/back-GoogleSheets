@@ -7,6 +7,7 @@ require("dotenv").config();
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const path = require('path');
+const corsMiddleware = require('./middlewares/corsMiddleware');
 
 const credentials = {
 type: process.env.TYPE,
@@ -23,6 +24,9 @@ universe_domain: process.env.UNIVERSE_DOMAIN
 }
 
 app.use(express.json())
+
+// Usar middleware de CORS
+app.use(corsMiddleware);
 
 // Adicionar suporte para requisições preflight (OPTIONS)
 app.options('*', (req, res) => {
