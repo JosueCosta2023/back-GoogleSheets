@@ -28,7 +28,7 @@ app.use(express.json())
 const allowedOrigins = [
     'http://localhost:3001', // Ambiente local
     'https://back-google-sheets-6inhdym9o-josues-projects-be67fa8d.vercel.app', // URL de produção da API
-    'https://back-google-sheets-git-main-josues-projects-be67fa8d.vercel.app/api-docs', // URL de produção do Swagger UI
+    'https://back-google-sheets-git-main-josues-projects-be67fa8d.vercel.app', // URL de produção do Swagger UI
 ];
 
 app.use(cors({
