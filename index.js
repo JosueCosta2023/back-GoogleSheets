@@ -24,12 +24,19 @@ universe_domain: process.env.UNIVERSE_DOMAIN
 
 app.use(express.json())
 
-// Atualizar configuração de CORS para incluir a URL de produção do Swagger UI
+// Adicionar suporte para requisições preflight (OPTIONS)
+app.options('*', (req, res) => {
+    res.header('Access-Control-Allow-Origin', 'https://back-google-sheets-git-main-josues-projects-be67fa8d.vercel.app');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.sendStatus(200);
+});
+
+// Atualizar configuração de CORS para incluir a origem do Swagger UI
 const allowedOrigins = [
     'http://localhost:3000', // Swagger UI local
-    process.env.BASE_URL,   // URL de produção
-    'https://editor.swagger.io', // Swagger Editor
-    'https://back-google-sheets-4ewrsrk87-josues-projects-be67fa8d.vercel.app' // Swagger UI em produção
+    'https://back-google-sheets-git-main-josues-projects-be67fa8d.vercel.app', // Swagger UI em produção
+    'https://editor.swagger.io' // Swagger Editor
 ];
 
 app.use(cors({
@@ -40,7 +47,7 @@ app.use(cors({
             callback(new Error(`Origem não permitida: ${origin}`));
         }
     },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true // Permitir envio de cookies e headers de autenticação
 }));
